@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RapdrpService {
@@ -24,6 +25,7 @@ public class RapdrpService {
 
     @Autowired
     LocationMasterRepository locationMasterRepository;
+
 
 
     public List<CircleMaster> getCircleListAllNew() {
@@ -75,7 +77,8 @@ public class RapdrpService {
         return rapdrpRepository.updateEstimateNo(model);
     }
 
-    public UpdateEstimateModel getPoleData(UpdateEstimateModel model) {
+    public UpdateEstimateModel getPoleData(UpdateEstimateModel model)
+    {
         return rapdrpRepository.getPoleData(model);
     }
 
@@ -134,5 +137,9 @@ public class RapdrpService {
         LocationMaster data = locationMasterRepository.findByLocationCode(distributionCenterCode);
         System.out.println(data.toString());
         return data;
+    }
+
+    public List<Map<String, Object>> getDtrList(String feederCode) {
+        return rapdrpRepository.findByFeederCode(feederCode);
     }
 }

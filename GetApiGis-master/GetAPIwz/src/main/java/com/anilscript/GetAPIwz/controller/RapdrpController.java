@@ -6,11 +6,11 @@ import com.anilscript.GetAPIwz.service.RapdrpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -357,4 +357,22 @@ public class RapdrpController {
 
         return data;
     }
+
+    @GetMapping("/dtrList")
+    public List<Map<String, Object>> getDtrList(@RequestParam String feeder_code)
+    {
+        final String methodName = "getDtrList()";
+        logger.info("{} called for feeder code : {}",methodName, feeder_code);
+
+        if(feeder_code == null || feeder_code.isEmpty())
+        {
+            throw  new InvalidInputException("Feeder code can not be null or empty");
+        }
+
+        List<Map<String, Object>> dtrList = rapdrpService.getDtrList(feeder_code);
+
+        System.out.println("DTR list size = "+dtrList.size());
+        return dtrList;
+    }
 }
+

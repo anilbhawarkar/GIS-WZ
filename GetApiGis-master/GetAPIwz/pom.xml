@@ -164,6 +164,20 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Hibernate Spatial (adds GeometryType mapping support) -->
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-spatial</artifactId>
+			<version>6.2.2.Final</version> <!-- match your Hibernate version -->
+		</dependency>
+
+		<!-- JTS Topology Suite (geometry model) -->
+		<dependency>
+			<groupId>org.locationtech.jts</groupId>
+			<artifactId>jts-core</artifactId>
+			<version>1.19.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -2,25 +2,19 @@ package com.anilscript.GetAPIwz.repository;
 
 import com.anilscript.GetAPIwz.model.*;
 import org.hibernate.TypeMismatchException;
-import org.locationtech.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.HTMLDocument;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 import static java.lang.Long.getLong;
@@ -572,6 +566,15 @@ public List<DistributionCenterMaster> getDcList(String division) {
             exception.printStackTrace();
         }
         return objlist;
+    }
+
+    public List<Map<String, Object>> findByFeederCode(String feederCode) {
+        String Sql = "select * from electric.distribution_transformer where feeder_code = '"+feederCode+"'";
+        System.out.println(Sql);
+        List<Map<String, Object>> data = jdbcTemplateObject.queryForList(Sql);
+        System.out.println("Data length="+data.size());
+        return data;
+
     }
 }
 
