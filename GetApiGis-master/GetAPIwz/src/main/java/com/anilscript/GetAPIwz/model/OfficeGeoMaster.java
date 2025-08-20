@@ -87,7 +87,8 @@ public class OfficeGeoMaster {
     private String constructionYear;
 
     @Lob
-    @Column(name = "building_image")
+    @Basic(fetch = FetchType.EAGER)
+    @Column(name = "building_image :: bytea", columnDefinition = "BYTEA")
     private byte[] image;
 
     @Column(name = "project_number")

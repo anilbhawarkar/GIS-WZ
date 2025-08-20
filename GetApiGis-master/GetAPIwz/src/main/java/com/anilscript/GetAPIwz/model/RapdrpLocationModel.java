@@ -1,8 +1,12 @@
 package com.anilscript.GetAPIwz.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 public class RapdrpLocationModel {
     public Integer LocationId;
     public String code_of_region;
@@ -17,4 +21,8 @@ public class RapdrpLocationModel {
     public String code_of_feeder;
     public String type_of_feeder;
     public String sub_station_code;
+    public String code;
+    public String lt_feeder_name;
+    public String lt_feeder_code;
+    public String type;
 }

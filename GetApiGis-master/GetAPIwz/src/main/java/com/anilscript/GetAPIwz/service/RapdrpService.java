@@ -142,4 +142,12 @@ public class RapdrpService {
     public List<Map<String, Object>> getDtrList(String feederCode) {
         return rapdrpRepository.findByFeederCode(feederCode);
     }
+
+    public List<Map<String, Object>> getDtrMapView(String dtrUniqueCode) {
+        return rapdrpRepository.getDtrMapView(dtrUniqueCode);
+    }
+
+    public Object getLTkvLineMapview(RapdrpLocationModel model) {
+        return rapdrpRepository.getLTkvLineMapview(model);
+    }
 }

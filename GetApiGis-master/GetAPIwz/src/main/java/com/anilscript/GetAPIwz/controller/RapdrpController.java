@@ -370,9 +370,46 @@ public class RapdrpController {
         }
 
         List<Map<String, Object>> dtrList = rapdrpService.getDtrList(feeder_code);
-
         System.out.println("DTR list size = "+dtrList.size());
+
+        if(dtrList == null || dtrList.isEmpty())
+        {
+            throw new ResourceNotFoundException("Dtr list not found for feeder_code="+feeder_code);
+        }
         return dtrList;
+    }
+
+    @GetMapping("/dtrmapview")
+    public List<Map<String, Object>> getDtrMapView(@RequestParam String dtr_unique_code)
+    {
+        String methodName = "getDtrMapView()";
+        logger.info("{} called for the parameter {}",methodName, dtr_unique_code);
+
+        if(dtr_unique_code == null || dtr_unique_code.isEmpty())
+        {
+            throw new InvalidInputException("DTR code can not be null or empty");
+        }
+
+        List<Map<String, Object>> dtrMapView = rapdrpService.getDtrMapView(dtr_unique_code);
+        System.out.println("size of dtr map view data ="+ dtrMapView.size());
+
+        if(dtrMapView == null || dtrMapView.isEmpty())
+        {
+            throw new ResourceNotFoundException("No DtrList found for the dtr_unique_code :"+dtr_unique_code);
+        }
+        return dtrMapView;
+    }
+
+    @PostMapping("/getltkvlinemapview")
+    public Object getLTkvLineMapview(@RequestBody RapdrpLocationModel model)
+    {
+        final String methodName = "getltkvlinemapview()";
+        logger.info("{} called for feeder code: {} and lt_feeder_code: {}",methodName,  model.getCode_of_feeder(), model.getLt_feeder_code());
+        if(model.getCode_of_feeder() == null || model.getCode_of_feeder().isEmpty() || model.getLt_feeder_code() == null || model.getLt_feeder_code().isEmpty())
+        {
+            throw new InvalidInputException("Feeder code or lt_feeder code can not be blank/empty");
+        }
+        return rapdrpService.getLTkvLineMapview(model);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.anilscript.GetAPIwz.repository;
 
 import com.anilscript.GetAPIwz.model.*;
+import org.geolatte.geom.M;
 import org.hibernate.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -575,6 +576,21 @@ public List<DistributionCenterMaster> getDcList(String division) {
         System.out.println("Data length="+data.size());
         return data;
 
+    }
+
+    public List<Map<String, Object>> getDtrMapView(String dtrUniqueCode) {
+        String Sql = "SELECT * FROM electric.support_structure where feeder_code ='"+dtrUniqueCode+"'";
+        List<Map<String, Object>> data = jdbcTemplateObject.queryForList(Sql);
+        System.out.println("Data length ="+data.size());
+        return data;
+    }
+
+    public Object getLTkvLineMapview(RapdrpLocationModel model) {
+        String feeder_code = model.getCode_of_feeder();
+        String lt_feeder_code = model.getLt_feeder_code();
+        String Sql = " select * from electric.get_ltkv_electric_line('" + feeder_code + "','" + lt_feeder_code + "')";
+        List<Map<String, Object>> _feeders = jdbcTemplateObject.queryForList(Sql);
+        return _feeders;
     }
 }
 
