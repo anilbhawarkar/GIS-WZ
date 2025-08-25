@@ -211,7 +211,7 @@ public class RapdrpRepository {
     }
 
 
-    public Object getRapdrpDTRMapview(RapdrpLocationModel model) {
+    public Object   getRapdrpDTRMapview(RapdrpLocationModel model) {
         String region = model.getCode_of_region();
         String circle = model.getCode_of_circle();
         String div = model.getCode_of_division();

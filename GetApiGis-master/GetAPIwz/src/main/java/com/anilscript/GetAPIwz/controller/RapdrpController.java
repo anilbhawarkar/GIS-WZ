@@ -343,20 +343,45 @@ public class RapdrpController {
     }
 
     @GetMapping("/hierarchy")
-    public LocationMaster gethierarchy(@RequestParam String distributionCenterCode)
+    public LocationMaster gethierarchy(@RequestParam String locationCode)
     {
         final String methodName ="gethirarchy()";
-        logger.info("{} called for the distribution code : {}", methodName,distributionCenterCode);
+        logger.info("{} called for the distribution code : {}", methodName,locationCode);
 
-        if(distributionCenterCode == null || distributionCenterCode.trim().isEmpty())
+        if(locationCode == null || locationCode.trim().isEmpty())
         {
-            throw new InvalidInputException("Distribution centre code can not be null or empty");
+            throw new InvalidInputException("Location code can not be null or empty");
         }
 
-        LocationMaster data = rapdrpService.getLocationMaster(distributionCenterCode);
+        LocationMaster data = rapdrpService.getLocationMaster(locationCode);
 
+        if(data == null)
+        {
+            throw new ResourceNotFoundException("Location data not found for code ="+locationCode);
+        }
         return data;
     }
+
+
+//    @GetMapping("/hierarchy")
+//    public LocationMaster gethierarchy(@RequestParam String distributionCenterCode)
+//    {
+//        final String methodName ="gethirarchy()";
+//        logger.info("{} called for the distribution code : {}", methodName,distributionCenterCode);
+//
+//        if(distributionCenterCode == null || distributionCenterCode.trim().isEmpty())
+//        {
+//            throw new InvalidInputException("Distribution centre code can not be null or empty");
+//        }
+//
+//        LocationMaster data = rapdrpService.getLocationMaster(distributionCenterCode);
+//
+//        if(data == null)
+//        {
+//            throw new ResourceNotFoundException("Location data not found for distribution code ="+distributionCenterCode);
+//        }
+//        return data;
+//    }
 
     @GetMapping("/dtrList")
     public List<Map<String, Object>> getDtrList(@RequestParam String feeder_code)

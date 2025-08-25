@@ -132,11 +132,39 @@ public class RapdrpService {
         return rapdrpRepository.getSS_CapacityPTRList(code_of_feeder);
     }
 
-    public LocationMaster getLocationMaster(String distributionCenterCode)
+    public LocationMaster getLocationMaster(String locationCode)
     {
-        LocationMaster data = locationMasterRepository.findByLocationCode(distributionCenterCode);
-        System.out.println(data.toString());
-        return data;
+//        boolean exists = userRepository.existsByEmail("test@email.com");
+        boolean exists = locationMasterRepository.existsByLocationCode(locationCode);
+
+        System.out.println("Data Status for DC = "+exists);
+
+        if(exists) {
+            LocationMaster data = locationMasterRepository.findByLocationCode(locationCode);
+            return data;
+        }
+
+        exists = locationMasterRepository.existsByDivisionCode(locationCode);
+        System.out.println("Data Status for Division = "+exists);
+
+        if(exists) {
+            List<LocationMaster> data = locationMasterRepository.findByDivisionCode(locationCode);
+            for (LocationMaster location : data)
+            {
+                return location;
+            }
+        }
+
+        exists = locationMasterRepository.existsByCircleCode(locationCode);
+        System.out.println("Data Status for Circle = "+exists);
+        if(exists) {
+            List<LocationMaster> data = locationMasterRepository.findByCircleCode(locationCode);
+            for (LocationMaster location : data)
+            {
+                return location;
+            }
+        }
+        return null;
     }
 
     public List<Map<String, Object>> getDtrList(String feederCode) {
