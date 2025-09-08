@@ -5,6 +5,7 @@ import com.anilscript.GetAPIwz.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -132,13 +133,35 @@ public class RapdrpService {
         return rapdrpRepository.getSS_CapacityPTRList(code_of_feeder);
     }
 
+//    public List<LocationMaster> getLocationMaster(String locationCode) {
+//
+//        boolean exists = locationMasterRepository.existsByLocationCode(locationCode);
+//        System.out.println("Data Status for DC = "+exists);
+//        if(exists) {
+//            List<LocationMaster> data = Collections.singletonList(locationMasterRepository.findByLocationCode(locationCode));
+//            return data;
+//        }
+//
+//        exists = locationMasterRepository.existsByDivisionCode(locationCode);
+//        System.out.println("Data Status for Division = "+exists);
+//        if(exists) {
+//            List<LocationMaster> data = locationMasterRepository.findByDivisionCode(locationCode);
+//            return data;
+//        }
+//
+//        exists = locationMasterRepository.existsByCircleCode(locationCode);
+//        System.out.println("Data Status for Circle = "+exists);
+//        if(exists) {
+//            List<LocationMaster> data = locationMasterRepository.findByCircleCode(locationCode);
+//            return data;
+//        }
+//        return null;
+//    }
+
     public LocationMaster getLocationMaster(String locationCode)
     {
-//        boolean exists = userRepository.existsByEmail("test@email.com");
         boolean exists = locationMasterRepository.existsByLocationCode(locationCode);
-
         System.out.println("Data Status for DC = "+exists);
-
         if(exists) {
             LocationMaster data = locationMasterRepository.findByLocationCode(locationCode);
             return data;
@@ -146,7 +169,6 @@ public class RapdrpService {
 
         exists = locationMasterRepository.existsByDivisionCode(locationCode);
         System.out.println("Data Status for Division = "+exists);
-
         if(exists) {
             List<LocationMaster> data = locationMasterRepository.findByDivisionCode(locationCode);
             for (LocationMaster location : data)
@@ -159,6 +181,18 @@ public class RapdrpService {
         System.out.println("Data Status for Circle = "+exists);
         if(exists) {
             List<LocationMaster> data = locationMasterRepository.findByCircleCode(locationCode);
+            for (LocationMaster location : data)
+            {
+                return location;
+            }
+        }
+
+        if(locationCode.equals("REGION_UJJAIN")) locationCode = "2";
+        if(locationCode.equals("REGION_INDORE") )locationCode = "1";
+        exists = locationMasterRepository.existsByRegionCode(locationCode);
+        System.out.println("Data Status for Region = "+exists);
+        if(exists) {
+            List<LocationMaster> data = locationMasterRepository.findByRegionCode(locationCode);
             for (LocationMaster location : data)
             {
                 return location;
@@ -178,4 +212,6 @@ public class RapdrpService {
     public Object getLTkvLineMapview(RapdrpLocationModel model) {
         return rapdrpRepository.getLTkvLineMapview(model);
     }
+
+
 }

@@ -23,4 +23,8 @@ public interface LocationMasterRepository extends JpaRepository<LocationMaster, 
     boolean existsByCircleCode(String locationCode);
 
     List<LocationMaster> findByCircleCode(String locationCode);
+
+    List<LocationMaster> findByRegionCode(String locationCode);
+
+    boolean existsByRegionCode(String locationCode);
 }

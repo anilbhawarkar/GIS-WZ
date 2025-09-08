@@ -4,15 +4,20 @@ import com.anilscript.GetAPIwz.exception.InvalidInputException;
 import com.anilscript.GetAPIwz.exception.ResourceNotFoundException;
 import com.anilscript.GetAPIwz.model.OfficeGeoMaster;
 import com.anilscript.GetAPIwz.service.OfficeGeoService;
+import com.anilscript.GetAPIwz.util.FileStorageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -24,6 +29,9 @@ public class OfficeGeoController {
 //    private static final Logger logger = GlobalResources.getLogger(BillController.class);
     @Autowired
     OfficeGeoService officeGeoService;
+
+    @Autowired
+    FileStorageUtil fileStorageUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(OfficeGeoController.class);
 
@@ -89,17 +97,34 @@ public class OfficeGeoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(officeGeoService.createOffice(office));
     }
 
-    // POST create with image
-    @PostMapping("/with-image")
-    public ResponseEntity<OfficeGeoMaster> createOfficeWithImage(
-            @RequestPart("office") OfficeGeoMaster office,
-            @RequestPart("image") MultipartFile image) throws IOException
-    {
-        final String methodName = "createOfficeWithImage()";
-        logger.info(methodName+"called");
-        office.setImage(image.getBytes());
-        return ResponseEntity.status(HttpStatus.CREATED).body(officeGeoService.createOffice(office));
-    }
+//    // POST create with image
+//    @PostMapping("/with-image")
+//    public ResponseEntity<OfficeGeoMaster> createOfficeWithImage(
+//            @RequestPart("office") OfficeGeoMaster office,
+//            @RequestPart("image") MultipartFile image) throws IOException
+//    {
+//        final String methodName = "createOfficeWithImage()";
+//        logger.info(methodName+"called");
+//        office.setBuildingImage(image.getBytes());
+//        return ResponseEntity.status(HttpStatus.CREATED).body(officeGeoService.createOffice(office));
+//    }
+@PostMapping("/with-image")
+public ResponseEntity<OfficeGeoMaster> createOfficeWithImage(
+        @RequestPart("office") OfficeGeoMaster office,
+        @RequestPart("image") MultipartFile image) throws IOException {
+
+    final String methodName = "createOfficeWithImage()";
+    logger.info(methodName + " called");
+
+    // Save the file to disk
+    String imagePath = fileStorageUtil.saveFile(image);
+
+    // Save only path in database
+    office.setBuildingImagePath(imagePath);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(officeGeoService.createOffice(office));
+}
+
 
     // PUT update office
     @PutMapping("/{id}")
@@ -121,16 +146,57 @@ public class OfficeGeoController {
         return ResponseEntity.noContent().build();
     }
 
-    // GET office image
+//    // GET office image
+//    @GetMapping("/{id}/image")
+//    public ResponseEntity<byte[]> getOfficeImage(@PathVariable Long id)
+//    {
+//        final String methodName = "getOfficeImage()";
+//        logger.info(methodName+"called for id: "+id);
+//        return officeGeoService.getOfficeById(id)
+//                .map(office -> ResponseEntity.ok()
+//                        .header("Content-Type", "image/jpeg")
+//                        .body(office.getBuildingImagePath())
+//                .orElse(ResponseEntity.notFound().build());
+//    }
+
     @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getOfficeImage(@PathVariable Long id)
-    {
+    public ResponseEntity<byte[]> getOfficeImage(@PathVariable Long id) {
         final String methodName = "getOfficeImage()";
-        logger.info(methodName+"called for id: "+id);
-        return officeGeoService.getOfficeById(id)
-                .map(office -> ResponseEntity.ok()
-                        .header("Content-Type", "image/jpeg")
-                        .body(office.getImage()))
+        logger.info(methodName + " called for id: " + id);
+
+        return (ResponseEntity<byte[]>) officeGeoService.getOfficeById(id)
+                .map(office -> {
+                    try {
+                        // 1. Get image path from DB
+                        String imagePath = office.getBuildingImagePath();
+
+                        if (imagePath == null || imagePath.isEmpty()) {
+                            logger.warn("No image path found for office ID: " + id);
+                            return ResponseEntity.notFound().build();
+                        }
+
+                        // 2. Read file bytes from disk
+                        Path path = Paths.get(imagePath).normalize();
+                        byte[] imageBytes = Files.readAllBytes(path);
+
+                        // 3. Determine content type
+                        String contentType = Files.probeContentType(path);
+                        if (contentType == null) {
+                            contentType = "application/octet-stream"; // fallback
+                        }
+
+                        // 4. Return image
+                        return ResponseEntity.ok()
+                                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                                .header(HttpHeaders.CONTENT_DISPOSITION,
+                                        "inline; filename=\"" + path.getFileName().toString() + "\"")
+                                .body(imageBytes);
+
+                    } catch (IOException e) {
+                        logger.error("Error reading image file for office ID: " + id, e);
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    }
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 }

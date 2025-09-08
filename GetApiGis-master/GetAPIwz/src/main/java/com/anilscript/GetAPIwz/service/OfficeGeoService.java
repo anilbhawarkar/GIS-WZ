@@ -14,6 +14,10 @@ public class OfficeGeoService {
     @Autowired
     OfficeGeoRepository officeGeoRepository;
 
+    public OfficeGeoService(OfficeGeoRepository officeGeoRepository) {
+        this.officeGeoRepository = officeGeoRepository;
+    }
+
     public List<OfficeGeoMaster> getAllOffices() {
         return officeGeoRepository.findAll();
     }
@@ -23,10 +27,14 @@ public class OfficeGeoService {
         return officeGeoRepository.findById(id);
     }
 
+//
+//    public OfficeGeoMaster createOffice(OfficeGeoMaster officeGeoMaster) {
+//        return officeGeoRepository.save(officeGeoMaster);
+//    }
+        public OfficeGeoMaster createOffice(OfficeGeoMaster officeGeoMaster) {
+            return officeGeoRepository.save(officeGeoMaster);
+        }
 
-    public OfficeGeoMaster createOffice(OfficeGeoMaster officeGeoMaster) {
-        return officeGeoRepository.save(officeGeoMaster);
-    }
 
 
     public OfficeGeoMaster updateOffice(Long id, OfficeGeoMaster officeGeoMaster) {
@@ -55,7 +63,7 @@ public class OfficeGeoService {
             existing.setTypeOfRoad(officeGeoMaster.getTypeOfRoad());
             existing.setCompoundWall(officeGeoMaster.getCompoundWall());
             existing.setConstructionYear(officeGeoMaster.getConstructionYear());
-            existing.setImage(officeGeoMaster.getImage());
+            existing.setBuildingImagePath(officeGeoMaster.getBuildingImagePath());
             existing.setProjectNumber(officeGeoMaster.getProjectNumber());
             existing.setWorkType(officeGeoMaster.getWorkType());
             return officeGeoRepository.save(existing);

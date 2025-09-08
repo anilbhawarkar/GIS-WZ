@@ -16,6 +16,9 @@ public class LocationMaster {
     @Column(name = "region_name")
     private String regionName;
 
+    @Column(name = "region_code")
+    private String regionCode;
+
     @Column(name = "circle_code")
     private String circleCode;
 

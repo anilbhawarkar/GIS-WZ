@@ -86,10 +86,17 @@ public class OfficeGeoMaster {
     @Column(name = "construction_year")
     private String constructionYear;
 
-    @Lob
-    @Basic(fetch = FetchType.EAGER)
-    @Column(name = "building_image :: bytea", columnDefinition = "BYTEA")
-    private byte[] image;
+//    @Lob
+//    @Basic(fetch = FetchType.EAGER)
+//    @Column(name = "building_image", columnDefinition = "BYTEA")
+//    private byte[] buildingImage;
+
+
+
+    // Store only the file path or URL, not the actual image data
+    @Column(name = "building_image")
+    private String buildingImagePath;
+
 
     @Column(name = "project_number")
     private String projectNumber;

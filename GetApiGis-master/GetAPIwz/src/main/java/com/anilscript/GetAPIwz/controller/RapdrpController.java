@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -342,22 +343,42 @@ public class RapdrpController {
         return rapdrpService.getSS_CapacityPTRList(code_of_feeder);
     }
 
+//    @GetMapping("/hierarchy")
+//    public List<LocationMaster> gethierarchy(@RequestParam String locationCode)
+//    {
+//        final String methodName ="gethirarchy()";
+//        logger.info("{} called for the distribution code : {}", methodName,locationCode);
+//
+//        if(locationCode == null || locationCode.trim().isEmpty())
+//        {
+//            throw new InvalidInputException("Location code can not be null or empty");
+//        }
+//
+//        List<LocationMaster> data = rapdrpService.getLocationMaster(locationCode);
+//
+//        if(data == null)
+//        {
+//            throw new ResourceNotFoundException("Location data not found for code ="+locationCode);
+//        }
+//        return data;
+//    }
+
     @GetMapping("/hierarchy")
-    public LocationMaster gethierarchy(@RequestParam String locationCode)
+    public LocationMaster gethierarchy(@RequestParam String loginCode)
     {
         final String methodName ="gethirarchy()";
-        logger.info("{} called for the distribution code : {}", methodName,locationCode);
+        logger.info("{} called for the distribution code : {}", methodName,loginCode);
 
-        if(locationCode == null || locationCode.trim().isEmpty())
+        if(loginCode == null || loginCode.trim().isEmpty())
         {
             throw new InvalidInputException("Location code can not be null or empty");
         }
 
-        LocationMaster data = rapdrpService.getLocationMaster(locationCode);
+        LocationMaster data = rapdrpService.getLocationMaster(loginCode);
 
         if(data == null)
         {
-            throw new ResourceNotFoundException("Location data not found for code ="+locationCode);
+            throw new ResourceNotFoundException("Location data not found for code ="+loginCode);
         }
         return data;
     }
